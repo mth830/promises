@@ -9,7 +9,3 @@ const downloadMultipleFiles=(files)=>{
   Promise.all(fileList).then(r=>r.forEach(res=>console.log(res)));
 }
 downloadMultipleFiles(["File A","File B","File C"]);
-
-let a = downloadFile("file A");
-let b = downloadFile("file B");
-let c = downloadFile("file C");
