@@ -28,14 +28,18 @@ class asyncQueue {
 }
 //TEST
 const aq = new asyncQueue(5);
-/*aq.insert(async (cb) => {
-    console.log(0);
-    setTimeout(cb, 4000);
-  });*/
-for (let i = 1; i < 100; i++) {
+aq.insert(async (cb) => {
+    setTimeout(()=>{
+      console.log(0);
+      cb();
+    }, 6000);
+  });
+for (let i = 1; i < 30; i++) {
   let func = async (cb) => {
-    console.log(i);
-    setTimeout(cb, 2000);
+    setTimeout(()=>{
+      console.log(i);
+      cb();
+    }, 1000);
   }
   aq.insert(func);
 
