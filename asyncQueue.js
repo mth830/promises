@@ -5,38 +5,46 @@ class asyncQueue {
     this.queuedFunctionList = [];
     this.queueIndex = 0;
   }
-  insert=(asyncFunc)=> {
-    this.queuedFunctionList.push(asyncFunc)
+  insert = (asyncFunc) => {
+    this.queuedFunctionList.push(asyncFunc);
 
   }
-  getNextPromise=()=> {
+  getNextPromise = () => {
     if (this.queueIndex + 1 > this.queuedFunctionList.length) {
       return new Promise((res, rej) => { });
     }
     const next = this.queuedFunctionList[this.queueIndex];
     this.queueIndex++;
-    return new Promise((res, rej) =>next(this.getNextPromise));
+    return new Promise((res, rej) => next(this.getNextPromise));
   }
-  run=()=> {
+  run = () => {
     for (let i = 0; i < this.concurrentCount && i < this.queuedFunctionList.length; i++) {
       let prom = Promise.resolve();
-      prom.then(this.getNextPromise)
+      prom.then(this.getNextPromise);
       this.activeFunctionList.push(prom);
     }
     return Promise.all(this.activeFunctionList);
   }
 }
 //TEST
-const aq = new asyncQueue(5);
+const aq = new asyncQueue();
+
 aq.insert(async (cb) => {
-    setTimeout(()=>{
-      console.log(0);
-      cb();
-    }, 6000);
-  });
+  setTimeout(() => {
+    console.log(0);
+    cb();
+  }, 6000);
+});
+aq.insert(async (cb) => {
+  setTimeout(() => {
+    console.log(0);
+    cb();
+  }, 12000);
+});
+
 for (let i = 1; i < 30; i++) {
   let func = async (cb) => {
-    setTimeout(()=>{
+    setTimeout(() => {
       console.log(i);
       cb();
     }, 1000);
