@@ -1,4 +1,4 @@
-class asyncQueue {
+class AsyncQueue {
   constructor(concurrentCount = 2) {
     this.concurrentCount = concurrentCount;
     this.activeCount = 0;
@@ -24,9 +24,9 @@ class asyncQueue {
   }
 }
 //TEST
-const aq = new asyncQueue(2);
+const aq = new AsyncQueue(10);
 //Comment out these first 2 for uniform  testing
-/*aq.insert(async (cb) => {
+aq.insert(async (cb) => {
   setTimeout(() => {
     console.log(0);
     cb();
@@ -37,7 +37,7 @@ aq.insert(async (cb) => {
     console.log(1);
     cb();
   }, 12000);
-});*/
+});
 
 for (let i = 1; i <= 30; i++) {
   let func = async (cb) => {
