@@ -13,33 +13,28 @@ class ProgressBar {
     this.usePercentage = usePercentage;
   }
   print = () => {
+    let template= "sdf";
+    const percentage = this.progress / this.max;
+    const background = '-'.repeat(this.barLength);
+    const completeBars = Math.floor(percentage * this.barLength);
+    const complete = '='.repeat(completeBars);
+    const fullBar = complete + background.slice(completeBars);
+    const barText = `[${fullBar}]`;
     if (this.usePercentage) {
-      this.printPercentage();
-      return;
+      template = this.getPercentageTemplate(barText,percentage)
     } else {
-      this.printChunks();
+      template = this.getChunksTemplate(barText);
     }
+     process.stdout.write(template);
   }
-  printPercentage = () => {
-    const percentage = this.progress / this.max;
-    const background = '-'.repeat(this.barLength);
-    const completeBars = Math.floor(percentage * this.barLength);
-    const complete = '='.repeat(completeBars);
-    const fullBar = complete + background.slice(completeBars);
-    const barText = `[${fullBar}]`;
-    const template = `\rPROGRESS: ${barText}    ${(100 * percentage).toFixed(2)}%`;
-    process.stdout.write(template);
 
+  getPercentageTemplate = (barText,percentage) => {
+    const template = `\rPROGRESS: ${barText}    ${(100 * percentage).toFixed(2)}%`;
+    return template;
   }
-  printChunks = () => {
-    const percentage = this.progress / this.max;
-    const background = '-'.repeat(this.barLength);
-    const completeBars = Math.floor(percentage * this.barLength);
-    const complete = '='.repeat(completeBars);
-    const fullBar = complete + background.slice(completeBars);
-    const barText = `[${fullBar}]`;
+  getChunksTemplate = (barText) => {
     const template = `\rPROGRESS: ${barText}    ${Math.floor(this.progress)}/${Math.floor(this.max)}`;
-    process.stdout.write(template);
+    return template;
 
   }
   increment = (increment) => {
@@ -51,7 +46,7 @@ class ProgressBar {
     this.progress = Math.min(this.progress, this.max);
   }
 }
-const options = { max: 354, barLength: 15, usePercentage: true };
+const options = { max: 354, barLength: 15, usePercentage: false };
 
 const testProgressBar = async () => {
   const pb = new ProgressBar(options);
