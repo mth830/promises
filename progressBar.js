@@ -9,7 +9,7 @@ class ProgressBar {
     this.updateFunction = updateFunction;
     this.progress = 0;
     this.max = max;
-    this.barLength = Math.min(barLength,MAX_BAR_LENGTH);
+    this.barLength = Math.min(barLength, MAX_BAR_LENGTH);
     this.usePercentage = usePercentage;
   }
   print = () => {
@@ -26,7 +26,7 @@ class ProgressBar {
     const completeBars = Math.floor(percentage * this.barLength);
     const complete = '='.repeat(completeBars);
     const fullBar = complete + background.slice(completeBars);
-    const barText = `[${fullBar}]`
+    const barText = `[${fullBar}]`;
     const template = `\rPROGRESS: ${barText}    ${(100 * percentage).toFixed(2)}%`;
     process.stdout.write(template);
 
@@ -37,7 +37,7 @@ class ProgressBar {
     const completeBars = Math.floor(percentage * this.barLength);
     const complete = '='.repeat(completeBars);
     const fullBar = complete + background.slice(completeBars);
-    const barText = `[${fullBar}]`
+    const barText = `[${fullBar}]`;
     const template = `\rPROGRESS: ${barText}    ${Math.floor(this.progress)}/${Math.floor(this.max)}`;
     process.stdout.write(template);
 
@@ -46,8 +46,8 @@ class ProgressBar {
     this.progress += increment;
     this.progress = Math.min(this.progress, this.max);
   }
-  setProgress = (progress) =>{
-    this.progress= progress;
+  setProgress = (progress) => {
+    this.progress = progress;
     this.progress = Math.min(this.progress, this.max);
   }
 }
@@ -66,7 +66,7 @@ const testProgressBar = async () => {
         res();
       }
     }, 100)
-  })
-}
+  });
+};
 console.log("Starting");
 testProgressBar();
