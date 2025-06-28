@@ -5,6 +5,7 @@ class StackableProgressBar {
     this.progressBars = [];
   }
   add = (ProgressBarInstance) => {
+    ProgressBarInstance.callback = this.print;
     this.progressBars.push(ProgressBarInstance);
   }
   print = () => {
@@ -22,8 +23,9 @@ class ProgressBar {
     const {
       max = 100,
       barLength = 100,
-      usePercentage = true } = options;
-
+      usePercentage = true,
+      callback = null } = options;
+    this.callback = callback;
     this.progress = 0;
     this.max = max;
     this.barLength = Math.min(barLength, MAX_BAR_LENGTH);
@@ -75,35 +77,47 @@ class ProgressBar {
     return template;
 
   }
+  runCallback = () => {
+    if (this.callback !== null) {
+      this.callback();
+    }
+  }
   increment = (increment) => {
     this.progress += increment;
     this.progress = Math.min(this.progress, this.max);
+    this.runCallback();
+
   }
   setProgress = (progress) => {
     this.progress = progress;
     this.progress = Math.min(this.progress, this.max);
+    this.runCallback();
   }
 }
 
-const options = { barLength: 20, usePercentage: false };
 const stackCount = 5;
 let intervals = [];
 const spb = new StackableProgressBar();
+const options = { barLength: 20, usePercentage: false };
 //add new bars
 for (let i = 0; i < stackCount; i++) {
   const pb = new ProgressBar(options);
   intervals[i] = setInterval(() => {
-    pb.increment(Math.random() * 5*(i+1));
+    pb.increment(Math.random() * 5 * (i + 1));
     if (pb.progressState === 100) {
       clearInterval(intervals[i]);
     }
   }, 100);
   spb.add(pb);
 }
-//run main progress bar
-let spbInt = setInterval(() => {
-  spb.print();
-  if (spb.progressBars.every(x => x.percentComplete === 100)) {
-    clearInterval(spbInt);
-  }
-}, 50);
+setTimeout(() => {
+  let i = stackCount;
+  const pb = new ProgressBar(options);
+  intervals[i] = setInterval(() => {
+    pb.increment(Math.random() * 5);
+    if (pb.progressState === 100) {
+      clearInterval(intervals[i]);
+    }
+  }, 100);
+  spb.add(pb);
+}, 1000);
